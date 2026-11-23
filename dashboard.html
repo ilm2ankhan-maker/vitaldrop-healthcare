@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Blood Donation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-container {
+            padding: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .dashboard-card h3 {
+            color: #e74c3c;
+            margin-top: 0;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #e74c3c;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #666;
+        }
+
+        .blood-inventory {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .blood-type {
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 6px;
+        }
+
+        .blood-type.low {
+            background: #ffe5e5;
+        }
+
+        .recent-activity {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .activity-item {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 10px;
+        }
+
+        .action-button {
+            background: #e74c3c;
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            transition: background-color 0.3s;
+        }
+
+        .action-button:hover {
+            background: #c0392b;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Blood Donation</div>
+            <ul>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./dashboard.html" class="active">Dashboard</a></li>
+                <li><a href="./donor_registration.html">Donor Registration</a></li>
+                <li><a href="./benefits_tips.html">Benefits & Tips</a></li>
+                <li><a href="./jiya.html">Health Awareness</a></li>
+                <li><a href="./predictive_analytics.html">Predictive Analytics</a></li>
+                <li><a href="./health_monitoring.html">Health Monitoring</a></li>
+                <li><a href="./reminders.html">Reminders</a></li>
+                <li><a href="./patient_records.html">Patient Records</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main class="dashboard-container">
+        <h1>Blood Donation Dashboard</h1>
+        
+        <div class="dashboard-grid">
+            <!-- Quick Actions -->
+            <div class="dashboard-card">
+                <h3>Quick Actions</h3>
+                <div class="quick-actions">
+                    <a href="./donor_registration.html" class="action-button">Register Donor</a>
+                    <a href="./reminders.html" class="action-button">Set Reminder</a>
+                    <a href="./health_monitoring.html" class="action-button">Health Check</a>
+                </div>
+            </div>
+
+            <!-- Statistics -->
+            <div class="dashboard-card">
+                <h3>Statistics</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <div class="stat-number">150+</div>
+                        <div class="stat-label">Active Donors</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">50+</div>
+                        <div class="stat-label">Monthly Donations</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">200+</div>
+                        <div class="stat-label">Lives Saved</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-number">98%</div>
+                        <div class="stat-label">Success Rate</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Blood Inventory -->
+            <div class="dashboard-card">
+                <h3>Blood Inventory Status</h3>
+                <div class="blood-inventory">
+                    <div class="blood-type">
+                        <h4>A+</h4>
+                        <div>Sufficient</div>
+                    </div>
+                    <div class="blood-type low">
+                        <h4>B+</h4>
+                        <div>Low</div>
+                    </div>
+                    <div class="blood-type">
+                        <h4>O+</h4>
+                        <div>Sufficient</div>
+                    </div>
+                    <div class="blood-type">
+                        <h4>AB+</h4>
+                        <div>Sufficient</div>
+                    </div>
+                    <div class="blood-type">
+                        <h4>A-</h4>
+                        <div>Sufficient</div>
+                    </div>
+                    <div class="blood-type low">
+                        <h4>B-</h4>
+                        <div>Low</div>
+                    </div>
+                    <div class="blood-type">
+                        <h4>O-</h4>
+                        <div>Sufficient</div>
+                    </div>
+                    <div class="blood-type">
+                        <h4>AB-</h4>
+                        <div>Sufficient</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Activity -->
+            <div class="dashboard-card">
+                <h3>Recent Activity</h3>
+                <div class="recent-activity">
+                    <div class="activity-item">
+                        <strong>New Donor Registration</strong>
+                        <p>John Doe registered as a new donor</p>
+                    </div>
+                    <div class="activity-item">
+                        <strong>Successful Donation</strong>
+                        <p>Sarah Smith completed blood donation</p>
+                    </div>
+                    <div class="activity-item">
+                        <strong>Appointment Scheduled</strong>
+                        <p>Mike Johnson scheduled for next week</p>
+                    </div>
+                    <div class="activity-item">
+                        <strong>Blood Request</strong>
+                        <p>Emergency request for O+ blood type</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Upcoming Events -->
+            <div class="dashboard-card">
+                <h3>Upcoming Blood Drives</h3>
+                <div class="activity-item">
+                    <strong>Community Blood Drive</strong>
+                    <p>Date: January 15, 2024<br>Location: City Hospital</p>
+                </div>
+                <div class="activity-item">
+                    <strong>College Campus Drive</strong>
+                    <p>Date: January 20, 2024<br>Location: University Center</p>
+                </div>
+            </div>
+
+            <!-- Health Tips -->
+            <div class="dashboard-card">
+                <h3>Health Tips</h3>
+                <div class="activity-item">
+                    <strong>Before Donation</strong>
+                    <p>Get adequate sleep and eat a healthy meal</p>
+                </div>
+                <div class="activity-item">
+                    <strong>After Donation</strong>
+                    <p>Rest for 15 minutes and stay hydrated</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Add any interactive features or real-time updates here
+        document.addEventListener('DOMContentLoaded', function() {
+            // Example: Update stats periodically
+            setInterval(function() {
+                // This would typically fetch real data from a server
+                // For demo purposes, we'll just update the UI
+                const stats = document.querySelectorAll('.stat-number');
+                stats.forEach(stat => {
+                    const currentValue = parseInt(stat.textContent);
+                    if (!isNaN(currentValue)) {
+                        stat.textContent = currentValue + Math.floor(Math.random() * 3);
+                    }
+                });
+            }, 5000);
+        });
+    </script>
+</body>
+</html>

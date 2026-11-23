@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Patient Health Monitoring Dashboard - Blood Donation</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .dashboard-content {
+            background-color: #fff;
+            padding: 2rem;
+            border-radius: 10px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            margin-top: 2rem;
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .dashboard-title {
+            color: #333;
+            margin: 0;
+        }
+
+        .refresh-info {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .patient-selector {
+            margin-bottom: 2rem;
+        }
+
+        .patient-selector select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            width: 200px;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: #fff;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+        }
+
+        .metric-title {
+            color: #333;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+            font-weight: bold;
+        }
+
+        /* Gauge Styling */
+        .gauge {
+            width: 200px;
+            height: 100px;
+            margin: 0 auto;
+            position: relative;
+            overflow: hidden;
+            border-radius: 100px 100px 0 0;
+            background: #f0f0f0;
+        }
+
+        .gauge::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 200px;
+            height: 100px;
+            background: conic-gradient(
+                from 180deg,
+                #4CAF50 0deg 60deg,  /* Green */
+                #FFC107 60deg 120deg, /* Yellow */
+                #f44336 120deg 180deg /* Red */
+            );
+            border-radius: 100px 100px 0 0;
+            transform-origin: 50% 100%;
+        }
+
+        .gauge-needle {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            width: 2px;
+            height: 90px;
+            background: #333;
+            transform-origin: bottom center;
+            transform: rotate(var(--rotation));
+            transition: transform 0.5s;
+        }
+
+        .gauge-value {
+            text-align: center;
+            font-size: 1.5rem;
+            color: #333;
+            margin-top: 1rem;
+        }
+
+        /* Blood Pressure Specific Styling */
+        .blood-pressure-container {
+            text-align: center;
+        }
+
+        .bp-status {
+            font-size: 1.2rem;
+            color: #28a745;
+            margin: 1rem 0;
+        }
+
+        .bp-gauges {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 1rem;
+        }
+
+        /* Vitals Row Styling */
+        .vitals-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .vital-card {
+            background: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            border: 1px solid #eee;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .vital-icon {
+            font-size: 1.5rem;
+            color: #e74c3c;
+        }
+
+        .vital-value {
+            font-size: 1.2rem;
+            color: #333;
+        }
+
+        /* Medication Adherence Chart */
+        .adherence-chart {
+            width: 200px;
+            height: 200px;
+            margin: 1rem auto;
+            position: relative;
+            border-radius: 50%;
+            background: conic-gradient(
+                #4CAF50 0% 68.38%,
+                #f44336 68.38% 100%
+            );
+        }
+
+        .adherence-legend {
+            text-align: center;
+            margin-top: 1rem;
+        }
+
+        .adherence-legend div {
+            margin: 0.5rem 0;
+        }
+
+        /* Steps Chart */
+        .steps-chart {
+            height: 300px;
+            margin-top: 1rem;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            padding: 1rem 0;
+        }
+
+        .step-bar {
+            width: 12%;
+            background: #4CAF50;
+            border-radius: 4px 4px 0 0;
+            position: relative;
+        }
+
+        .step-bar::after {
+            content: attr(data-steps);
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+        }
+
+        .step-target {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 10px;
+            height: 10px;
+            background: #FFC107;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">Blood Donation</div>
+            <ul>
+                <li><a href="./index.html">Home</a></li>
+                <li><a href="./dashboard.html">Dashboard</a></li>
+                <li><a href="./donor_registration.html">Donor Registration</a></li>
+                <li><a href="./benefits_tips.html">Benefits & Tips</a></li>
+                <li><a href="./jiya.html">Health Awareness</a></li>
+                <li><a href="./predictive_analytics.html">Predictive Analytics</a></li>
+                <li><a href="./health_monitoring.html" class="active">Health Monitoring</a></li>
+                <li><a href="./reminders.html">Reminders</a></li>
+                <li><a href="./patient_records.html">Patient Records</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <div class="dashboard-content">
+            <div class="dashboard-header">
+                <h1 class="dashboard-title">Patient Health Monitoring Dashboard</h1>
+                <div class="refresh-info">Data refreshed at Dec 30,2024 10:18 PM</div>
+            </div>
+
+            <div class="patient-selector">
+                <label for="patient-id">Patient ID</label>
+                <select id="patient-id">
+                    <option value="AN01">AN01</option>
+                </select>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3 class="metric-title">Heart Rate</h3>
+                    <div class="gauge">
+                        <div class="gauge-needle" style="--rotation: 90deg;"></div>
+                    </div>
+                    <div class="gauge-value">82.83 bph</div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="metric-title">Blood Pressure</h3>
+                    <div class="blood-pressure-container">
+                        <div>Avg. Blood Pressure=118/78 mmHg</div>
+                        <div class="bp-status">NORMAL</div>
+                        <div class="bp-gauges">
+                            <div>
+                                <div>Systolic</div>
+                                <div class="gauge" style="width: 100px; height: 50px;">
+                                    <div class="gauge-needle" style="--rotation: 118deg;"></div>
+                                </div>
+                                <div>118 mmHg</div>
+                            </div>
+                            <div>
+                                <div>Diastolic</div>
+                                <div class="gauge" style="width: 100px; height: 50px;">
+                                    <div class="gauge-needle" style="--rotation: 78deg;"></div>
+                                </div>
+                                <div>78 mmHg</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="metric-title">Pulse Rate</h3>
+                    <div class="gauge">
+                        <div class="gauge-needle" style="--rotation: 85deg;"></div>
+                    </div>
+                    <div class="gauge-value">85.70 bpm</div>
+                    <div style="text-align: center; margin-top: 0.5rem;">NORMAL</div>
+                </div>
+            </div>
+
+            <div class="vitals-row">
+                <div class="vital-card">
+                    <span class="vital-icon">🌡️</span>
+                    <div class="vital-value">33.90 °C</div>
+                </div>
+                <div class="vital-card">
+                    <span class="vital-icon">🫁</span>
+                    <div class="vital-value">15.27 bpm</div>
+                </div>
+                <div class="vital-card">
+                    <span class="vital-icon">💉</span>
+                    <div class="vital-value">114.77 mg/dL</div>
+                </div>
+                <div class="vital-card">
+                    <span class="vital-icon">📊</span>
+                    <div class="vital-value">204.07 mg/dL</div>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-card">
+                    <h3 class="metric-title">Oxygen Saturation</h3>
+                    <div class="gauge">
+                        <div class="gauge-needle" style="--rotation: 90deg;"></div>
+                    </div>
+                    <div class="gauge-value">90.07%</div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="metric-title">Medication Adherence</h3>
+                    <div class="adherence-chart"></div>
+                    <div class="adherence-legend">
+                        <div>Taken: 68.38%</div>
+                        <div>Missed: 31.62%</div>
+                    </div>
+                </div>
+
+                <div class="metric-card">
+                    <h3 class="metric-title">Readmission Rate</h3>
+                    <div class="gauge">
+                        <div class="gauge-needle" style="--rotation: 13deg;"></div>
+                    </div>
+                    <div class="gauge-value">13.70%</div>
+                </div>
+            </div>
+
+            <div class="metric-card">
+                <h3 class="metric-title">Step Count Progress: Last 7 Days</h3>
+                <div class="steps-chart">
+                    <div class="step-bar" style="height: 60%;" data-steps="8000">
+                        <div class="step-target"></div>
+                    </div>
+                    <div class="step-bar" style="height: 70%;" data-steps="9000">
+                        <div class="step-target"></div>
+                    </div>
+                    <div class="step-bar" style="height: 80%;" data-steps="9500">
+                        <div class="step-target"></div>
+                    </div>
+                    <div class="step-bar" style="height: 75%;" data-steps="9200">
+                        <div class="step-target"></div>
+                    </div>
+                    <div class="step-bar" style="height: 85%;" data-steps="10000">
+                        <div class="step-target"></div>
+                    </div>
+                    <div class="step-bar" style="height: 65%;" data-steps="8500">
+                        <div class="step-target"></div>
+                    </div>
+                    <div class="step-bar" style="height: 55%;" data-steps="7500">
+                        <div class="step-target"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 Blood Donation. All rights reserved.</p>
+    </footer>
+</body>
+</html>
